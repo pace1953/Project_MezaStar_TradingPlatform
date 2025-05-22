@@ -88,3 +88,9 @@ Consider defining a bean of type 'org.modelmapper.ModelMapper' in your configura
 2025-05-22T14:13:25.556+08:00  INFO 5752 --- [MezaStarTradingPlatform] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
 2025-05-22T14:13:25.901+08:00  INFO 5752 --- [MezaStarTradingPlatform] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
 2025-05-22T14:13:25.907+08:00  INFO 5752 --- [MezaStarTradingPlatform] [main] c.e.d.MezaStarTradingPlatformApplication : Started MezaStarTradingPlatformApplication in 2.501 seconds (process running for 2.846)
+2025-05-22T14:52:37.771+08:00  INFO 5752 --- [MezaStarTradingPlatform] [RMI TCP Connection(48)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2025-05-22T14:52:37.775+08:00  INFO 5752 --- [MezaStarTradingPlatform] [RMI TCP Connection(48)-127.0.0.1] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-22T14:52:37.830+08:00  INFO 5752 --- [MezaStarTradingPlatform] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-05-22T14:52:37.839+08:00  INFO 5752 --- [MezaStarTradingPlatform] [RMI TCP Connection(48)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-22T14:52:37.846+08:00  INFO 5752 --- [MezaStarTradingPlatform] [RMI TCP Connection(48)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-05-22T14:52:37.852+08:00  INFO 5752 --- [MezaStarTradingPlatform] [RMI TCP Connection(48)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
