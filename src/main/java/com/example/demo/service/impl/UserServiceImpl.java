@@ -12,6 +12,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import com.example.demo.util.Hash;
 
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -43,12 +44,19 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<UserDto> findAllUser() {
+	public void registerUser(String username, String password, String email) {
 		
-		return userRepository.findAll()
-				.stream()
-				.map(userMapper::toDto)
-				.toList();
+		User user = new User();
+		user.setUserName(username);
+		
+		// 取 Hash
+		String hashSalt = Hash.getSalt(); // 取得鹽
+		String hashPassword = Hash.getHash(password, hashSalt); // 取 hash 密碼
+		user.setPasswordHash(hashPassword);
+		user.setSalt(hashSalt);
+		user.setEmail(email);
+		userRepository.save(user);
+		
 	}
 
 }

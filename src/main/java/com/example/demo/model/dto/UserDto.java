@@ -8,5 +8,5 @@ public class UserDto {
 	private String userName;
 	private String email;
 	private String role;
-	private Boolean actice;
+	private Boolean active;
 }

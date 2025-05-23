@@ -14,6 +14,7 @@ import com.example.demo.exception.CertException;
 import com.example.demo.model.dto.UserCert;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.CertService;
+import com.example.demo.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -24,6 +25,22 @@ public class LoginRestController {
 	
 	@Autowired
 	private CertService certService;
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping("/register")
+	public ResponseEntity<ApiResponse<Void>> register(@RequestParam String username, @RequestParam String password, @RequestParam String email){
+		try {
+			userService.registerUser(username, password, email);
+			return ResponseEntity.ok(ApiResponse.success("註冊成功", null));
+		} catch (Exception e) {
+			return ResponseEntity
+	                .status(HttpStatus.UNAUTHORIZED)
+	                .body(ApiResponse.error(401, "註冊失敗: " + e.getMessage()));
+		}
+		
+		
+	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<ApiResponse<Void>> login(@RequestParam String username, @RequestParam String password, HttpSession session) {
@@ -45,7 +62,7 @@ public class LoginRestController {
 	                .status(HttpStatus.UNAUTHORIZED)
 	                .body(ApiResponse.error(401, "登出失敗: 尚未登入 "));
 	    }
-	    session.invalidate();
+	    session.invalidate(); // invalidate()：將session裡所存放的所有資訊都失效 
 	    return ResponseEntity.ok(ApiResponse.success("登出成功", null));
 	}
 	

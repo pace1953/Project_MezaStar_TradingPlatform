@@ -21,5 +21,4 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query(value = "select u from User u")  // 使用 u 作為別名
 	List<User> getAllUsers();
 	
-	
 }
