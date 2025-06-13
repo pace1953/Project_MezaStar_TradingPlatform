@@ -2,6 +2,8 @@ package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.example.demo.model.entity.User;
@@ -20,5 +22,11 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	// 3. (Java)PQL
 	@Query(value = "select u from User u")  // 使用 u 作為別名
 	List<User> getAllUsers();
+	
+    // 根據使用者ID查詢
+    Optional<User> findByUserId(Integer userId);
+    
+    // 根據email查詢
+    Optional<User> findByEmail(String email);
 	
 }

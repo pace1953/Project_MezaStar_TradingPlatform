@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
 		String salt = Hash.getSalt();
 		String passwordHash = Hash.getHash(password, salt);
 		
-		User user = new User(null, username, passwordHash, salt, email, active, role);
+		User user = new User(null, username, passwordHash, salt, email, active, role, null, null, null);
 		
 		userRepository.save(user);
 		
@@ -58,5 +58,15 @@ public class UserServiceImpl implements UserService{
 		userRepository.save(user);
 		
 	}
+	
+    @Override
+    public Optional<UserDto> updateUser(Integer userId, UserDto userDto) {
+        return userRepository.findById(userId)
+                .map(existingUser -> {
+                    userMapper.updateEntity(userDto, existingUser);
+                    User updatedUser = userRepository.save(existingUser);
+                    return userMapper.toDto(updatedUser);
+                });
+    }
 
 }

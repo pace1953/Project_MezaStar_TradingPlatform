@@ -1,7 +1,6 @@
 package com.example.demo.model.dto;
 
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,19 +8,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardDto {
-	
+public class CartDto {
+
+    private Integer cartId;
+    private Integer buyerId;
     private Integer cardId;
     private String cardName;
-    private String series;
+    private int cardPrice;
     private String starLevel;
-    private int price;
-    private String status;
-    private Integer sellerId;
+    private String series;
     private String sellerName;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Integer quantity;
-    private Integer availableQuantity;
-    
+    private int subtotal;
+    private LocalDateTime addedAt;
 }

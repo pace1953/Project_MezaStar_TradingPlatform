@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.CertException;
+
 import com.example.demo.exception.PasswordInvalidException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.dto.UserCert;

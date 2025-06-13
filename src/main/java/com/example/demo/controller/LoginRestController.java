@@ -72,4 +72,16 @@ public class LoginRestController {
 	    return ResponseEntity.ok(ApiResponse.success("檢查登入", loggedIn));
 	}
 	
+	@GetMapping("/user-info")
+	public ResponseEntity<ApiResponse<UserCert>> getUserInfo(HttpSession session) {
+	    UserCert userCert = (UserCert) session.getAttribute("userCert");
+	    if (userCert != null) {
+	        return ResponseEntity.ok(ApiResponse.success("獲取使用者資訊成功", userCert));
+	    } else {
+	        return ResponseEntity
+	                .status(HttpStatus.UNAUTHORIZED)
+	                .body(ApiResponse.error(401, "未登入"));
+	    }
+	}
+	
 }

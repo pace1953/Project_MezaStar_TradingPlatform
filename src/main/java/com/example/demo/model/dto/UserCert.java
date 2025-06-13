@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class UserCert {
 	private Integer userId;
-	private String username;
+	private String userName;
 	private String role;
 }
 

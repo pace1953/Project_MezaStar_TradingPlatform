@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import com.example.demo.model.dto.UserDto;
 
@@ -15,4 +13,6 @@ public interface UserService {
 	
 	// 註冊
 	public void registerUser(String username, String password, String email);
+	
+	Optional<UserDto> updateUser(Integer userId, UserDto userDto);
 }

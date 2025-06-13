@@ -23,4 +23,12 @@ public class UserMapper {
 		return modelMapper.map(userDto, User.class);
 	}
 	
+	// 更新使用者ㄉ資料(不含密碼)
+	public void updateEntity(UserDto userDto, User user) {
+		user.setUserName(userDto.getUserName());
+		user.setEmail(userDto.getEmail());
+		user.setRole(userDto.getRole());
+		user.setActive(userDto.getActive());
+	}
+	
 }
