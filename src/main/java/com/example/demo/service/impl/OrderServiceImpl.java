@@ -25,6 +25,7 @@ import com.example.demo.repository.CartRepository;
 import com.example.demo.service.OrderService;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
     
     @Autowired
@@ -46,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemMapper orderItemMapper;
     
     @Override
+    @Transactional
     public List<OrderDto> findMyOrders(Integer buyerId) {
         return orderRepository.findByBuyerIdOrderByOrderTimeDesc(buyerId).stream()
                 .map(orderMapper::toDto)
@@ -53,18 +55,21 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Override
+    @Transactional
     public Optional<OrderDto> findOrderById(Integer orderId) {
         return orderRepository.findById(orderId)
                 .map(orderMapper::toDto);
     }
     
     @Override
+    @Transactional
     public Optional<OrderDto> findOrderByNumber(String orderNumber) {
         return orderRepository.findByOrderNumber(orderNumber)
                 .map(orderMapper::toDto);
     }
     
     @Override
+    @Transactional
     public List<OrderDto> findAllOrders() {
         return orderRepository.findAll().stream()
                 .map(orderMapper::toDto)
@@ -72,6 +77,7 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Override
+    @Transactional
     public List<OrderDto> findOrdersByStatus(String status) {
         return orderRepository.findByStatus(status).stream()
                 .map(orderMapper::toDto)
@@ -142,6 +148,7 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Override
+    @Transactional
     public Optional<OrderDto> updateOrderStatus(Integer orderId, String status) {
         return orderRepository.findById(orderId)
                 .map(order -> {

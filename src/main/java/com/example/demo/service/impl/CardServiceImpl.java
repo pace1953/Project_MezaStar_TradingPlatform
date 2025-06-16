@@ -13,7 +13,10 @@ import com.example.demo.model.entity.Card;
 import com.example.demo.repository.CardRepository;
 import com.example.demo.service.CardService;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class CardServiceImpl implements CardService{
 	
     @Autowired
@@ -23,6 +26,7 @@ public class CardServiceImpl implements CardService{
     private CardMapper cardMapper;
     
     @Override
+    @Transactional
     public List<CardDto> findAllCards() {
         return cardRepository.findAll().stream()
                 .map(cardMapper::toDto)
@@ -30,12 +34,14 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public Optional<CardDto> findCardById(Integer cardId) {
         return cardRepository.findById(cardId)
                 .map(cardMapper::toDto);
     }
     
     @Override
+    @Transactional
     public List<CardDto> findAvailableCards() {
         return cardRepository.findByStatus("上架中").stream()
                 .map(cardMapper::toDto)
@@ -43,6 +49,7 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public List<CardDto> findMyCards(Integer sellerId) {
         return cardRepository.findBySellerId(sellerId).stream()
                 .map(cardMapper::toDto)
@@ -50,6 +57,7 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public CardDto createCard(CardDto cardDto) {
         Card card = cardMapper.toEntity(cardDto);
         Card savedCard = cardRepository.save(card);
@@ -57,6 +65,7 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public Optional<CardDto> updateCard(Integer cardId, CardDto cardDto) {
         return cardRepository.findById(cardId)
                 .map(existingCard -> {
@@ -67,6 +76,7 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public boolean deleteCard(Integer cardId) {
         if (cardRepository.existsById(cardId)) {
             cardRepository.deleteById(cardId);
@@ -76,6 +86,7 @@ public class CardServiceImpl implements CardService{
     }
     
     @Override
+    @Transactional
     public Optional<CardDto> markCardAsSold(Integer cardId) {
         return cardRepository.findById(cardId)
                 .map(card -> {
@@ -86,6 +97,7 @@ public class CardServiceImpl implements CardService{
     }
 
 	@Override
+	@Transactional
 	public List<CardDto> searchCardsByMultipleConditions(String series, String starLevel, String keyword,
 			Integer minPrice, Integer maxPrice) {
 		return cardRepository.findCardByMultipleConditions(series, starLevel, keyword, minPrice, maxPrice)

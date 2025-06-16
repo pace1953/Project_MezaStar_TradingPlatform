@@ -32,7 +32,7 @@ public interface CartRepository extends JpaRepository<Cart, Integer>{
     // 根據買家ID刪除購物車（結帳後清空）
     @Modifying
     @Transactional
-    @Query("DELETE FROM Cart c WHERE c.buyer.Id = :buyerId")
+    @Query("DELETE FROM Cart c WHERE c.buyerId = :buyerId")
     void deleteByBuyerId(Integer buyerId);
 
 }

@@ -11,7 +11,10 @@ import com.example.demo.model.dto.OrderItemDto;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.service.OrderItemService;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class OrderItemServiceImpl implements OrderItemService {
     
     @Autowired
@@ -21,6 +24,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private OrderItemMapper orderItemMapper;
     
     @Override
+    @Transactional
     public List<OrderItemDto> findOrderItems(Integer orderId) {
         return orderItemRepository.findByOrderId(orderId).stream()
                 .map(orderItemMapper::toDto)

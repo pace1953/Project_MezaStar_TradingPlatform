@@ -17,7 +17,10 @@ import com.example.demo.repository.CardRepository;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.service.CartService;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class CartServiceImpl implements CartService {
     
     @Autowired
@@ -30,6 +33,7 @@ public class CartServiceImpl implements CartService {
     private CardRepository cardRepository;
     
     @Override
+    @Transactional
     public List<CartDto> findMyCart(Integer buyerId) {
         return cartRepository.findByBuyerIdWithDetails(buyerId).stream()
                 .map(cartMapper::toDto)
@@ -37,6 +41,7 @@ public class CartServiceImpl implements CartService {
     }
     
     @Override
+    @Transactional
     public CartDto addToCart(CartDto cartDto) throws CardException, CartException {
     	
     	// 檢查卡匣是否存在，若存在 -> 檢查是否還有庫存
@@ -89,6 +94,7 @@ public class CartServiceImpl implements CartService {
     }
     
     @Override
+    @Transactional
     public Optional<CartDto> updateCartQuantity(Integer cartId, Integer quantity) {
         return cartRepository.findById(cartId)
                 .map(cart -> {
@@ -99,6 +105,7 @@ public class CartServiceImpl implements CartService {
     }
     
     @Override
+    @Transactional
     public boolean checkAvailableQuantity(Integer cardId, Integer requestedQuantity) {
     	Optional<Card> optCard = cardRepository.findById(cardId);
     	
@@ -110,6 +117,7 @@ public class CartServiceImpl implements CartService {
     }
     
     @Override
+    @Transactional
     public boolean removeFromCart(Integer cartId) {
         if (cartRepository.existsById(cartId)) {
             cartRepository.deleteById(cartId);
@@ -119,11 +127,13 @@ public class CartServiceImpl implements CartService {
     }
     
     @Override
+    @Transactional
     public void clearCart(Integer buyerId) {
         cartRepository.deleteByBuyerId(buyerId);
     }
     
     @Override
+    @Transactional
     public boolean isInCart(Integer buyerId, Integer cardId) {
         return cartRepository.existsByBuyerIdAndCardId(buyerId, cardId);
     }
