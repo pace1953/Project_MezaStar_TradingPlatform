@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public List<CartDto> findMyCart(Integer buyerId) {
-        return cartRepository.findByBuyerIdWithDetails(buyerId).stream()
+        return cartRepository.findByBuyerId(buyerId).stream()
                 .map(cartMapper::toDto)
                 .collect(Collectors.toList());
     }

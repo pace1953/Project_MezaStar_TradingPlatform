@@ -30,7 +30,7 @@ public class OrderRestController {
     @Autowired
     private OrderService orderService;
     
-    // 查詢我的訂單
+    // 查詢我的訂單(買家)
     @GetMapping("/my-orders")
     public ResponseEntity<ApiResponse<List<OrderDto>>> getMyOrders(HttpSession session) {
         UserCert userCert = (UserCert) session.getAttribute("userCert");
@@ -98,7 +98,7 @@ public class OrderRestController {
     
     // 從購物車建立訂單（結帳）
     @PostMapping("/checkout")
-    public ResponseEntity<ApiResponse<OrderDto>> checkout(HttpSession session) {
+    public ResponseEntity<ApiResponse<List<OrderDto>>> checkout(HttpSession session) {
         UserCert userCert = (UserCert) session.getAttribute("userCert");
         if (userCert == null) {
             return ResponseEntity
@@ -107,8 +107,8 @@ public class OrderRestController {
         }
         
         try {
-            OrderDto order = orderService.createOrderFromCart(userCert.getUserId());
-            return ResponseEntity.ok(ApiResponse.success("結帳成功", order));
+            List<OrderDto> orders = orderService.createOrderFromCart(userCert.getUserId());
+            return ResponseEntity.ok(ApiResponse.success("結帳成功", orders));
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -191,4 +191,49 @@ public class OrderRestController {
                     .body(ApiResponse.error(404, "找不到該訂單"));
         }
     }
+    
+    // ------ 賣家 ------
+    // 查詢我的訂單(賣家)
+    @GetMapping("/seller/my-sales")
+    public ResponseEntity<ApiResponse<List<OrderDto>>> getMySales(HttpSession session) {
+        UserCert userCert = (UserCert) session.getAttribute("userCert");
+        if (userCert == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(401, "請先登入"));
+        }
+        
+        List<OrderDto> orders = orderService.findMySoldOrders(userCert.getUserId());
+        return ResponseEntity.ok(ApiResponse.success("查詢成功", orders));
+    }
+
+
+    // 根據狀態查詢賣家的訂單
+    @GetMapping("/seller/my-sales/status/{status}")
+    public ResponseEntity<ApiResponse<List<OrderDto>>> getMySalesByStatus(
+            @PathVariable String status, HttpSession session) {
+        UserCert userCert = (UserCert) session.getAttribute("userCert");
+        if (userCert == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(401, "請先登入"));
+        }
+        
+        // 驗證狀態值
+        if (!isValidOrderStatus(status)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error(400, "無效的訂單狀態"));
+        }
+        
+        List<OrderDto> orders = orderService.findSoldOrdersByStatus(userCert.getUserId(), status);
+        return ResponseEntity.ok(ApiResponse.success("查詢成功", orders));
+    }
+    
+    private boolean isValidOrderStatus(String status) {
+        return status != null && 
+               (status.equals("待處理") || status.equals("已完成") || status.equals("已取消"));
+    }
 }
+
+

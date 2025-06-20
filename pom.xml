@@ -51,12 +51,6 @@
 	        <version>3.0.0</version>
 	    </dependency>
 	    
-	    <!-- JdbcTemplate (JDBC 豪華昇級版)  -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>
-		
 		<!-- JPA  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -26,13 +26,16 @@ public class Order {
     @Column(name = "buyer_id", nullable = false)
     private Integer buyerId;
     
+    @Column(name = "seller_id", nullable = false)
+    private Integer sellerId;
+    
     @Column(name = "total_amount", nullable = false)
     private int totalAmount;
     
     @Column(name = "total_items", nullable = false)
     private Integer totalItems;
     
-	// 訂單狀態：待處理、已完成、已取消
+	// 訂單狀態：待處理、已完成
     @Column(name = "status", nullable = false, length = 20)
     private String status = "待處理"; 
     
@@ -57,6 +60,11 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", insertable = false, updatable = false)
     private User buyer;
+    
+    // 與seller的關聯 (多對一)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", insertable = false, updatable = false)
+    private User seller;
     
     // 與OrderItem的關聯 (一對多)
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)

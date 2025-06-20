@@ -20,7 +20,7 @@ public interface CartRepository extends JpaRepository<Cart, Integer>{
             "JOIN FETCH c.card card " +
             "JOIN FETCH card.seller " +
             "WHERE c.buyerId = :buyerId")
-     List<Cart> findByBuyerIdWithDetails(@Param("buyerId") Integer buyerId);
+     List<Cart> findByBuyerId(@Param("buyerId") Integer buyerId);
     
     // 根據買家和卡匣查詢（檢查是否已在購物車）
     Optional<Cart> findByBuyerIdAndCardId(Integer buyerId, Integer cardId);

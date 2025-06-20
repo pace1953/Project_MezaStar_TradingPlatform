@@ -49,4 +49,6 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id", insertable = false, updatable = false)
     private Card card;
+    
+    
 }

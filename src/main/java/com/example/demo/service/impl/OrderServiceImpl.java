@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,9 +51,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public List<OrderDto> findMyOrders(Integer buyerId) {
-        return orderRepository.findByBuyerIdOrderByOrderTimeDesc(buyerId).stream()
-                .map(orderMapper::toDto)
-                .collect(Collectors.toList());
+    	List<Order> orders = orderRepository.findOrderByBuyerId(buyerId);
+        return orders.stream().map(orderMapper::toDto).collect(Collectors.toList());
     }
     
     @Override
@@ -86,9 +87,10 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     @Transactional
-    public OrderDto createOrderFromCart(Integer buyerId) throws CartException, CardException {
-        // 1. 取得購物車內容
-        List<Cart> cartItems = cartRepository.findByBuyerIdWithDetails(buyerId);
+    public List<OrderDto> createOrderFromCart(Integer buyerId) throws CartException, CardException {
+        
+    	// 1. 取得購物車內容
+        List<Cart> cartItems = cartRepository.findByBuyerId(buyerId);
         
         if (cartItems.isEmpty()) {
             throw new CartException("購物車是空的");
@@ -113,38 +115,58 @@ public class OrderServiceImpl implements OrderService {
         	
         }
         
-        // 3. 計算總金額和總數量
-        int totalAmount = cartItems.stream()
-                .mapToInt(cart -> cart.getCard().getPrice() * cart.getQuantity())
-                .sum();
+        // 3. 根據賣家的ID把購物車的Item分組
+        Map<Integer, List<Cart>> cartItemBySeller = cartItems.stream()
+        		.collect(Collectors.groupingBy(cart -> cart.getCard().getSellerId()));
         
-        int totalItems = cartItems.stream()
-                .mapToInt(Cart::getQuantity)
-                .sum();
+        // 4. 根據賣家建立訂單
+        List<OrderDto> createOrderDtos = new ArrayList<>();
         
-        // 4. 建立訂單
-        Order order = new Order();
-        order.setBuyerId(buyerId);
-        order.setTotalAmount(totalAmount);
-        order.setTotalItems(totalItems);
-        Order savedOrder = orderRepository.save(order);
-        
-        // 5. 建立訂單明細並扣除庫存數量
-        for (Cart cartItem : cartItems) {
-        	// 建立訂單明細
-            OrderItem orderItem = orderItemMapper.createFromCart(cartItem, savedOrder.getOrderId());
-            orderItemRepository.save(orderItem);
-            
-            // 扣除庫存數量
-            Card card = cardRepository.findById(cartItem.getCardId()).get();
-            card.updateAvailableQuantity(cartItem.getQuantity());
-            cardRepository.save(card);
+        for(Map.Entry<Integer, List<Cart>> entry : cartItemBySeller.entrySet()) {
+        	Integer sellerId = entry.getKey();
+        	List<Cart> soldCartItem = entry.getValue();
+        	
+        	int totalAmount = soldCartItem.stream()
+        		.mapToInt(cart -> cart.getCard().getPrice() * cart.getQuantity()).sum();
+        	int totalItems = soldCartItem.stream()
+        		.mapToInt(Cart::getQuantity).sum();
+        	
+        	// 建立新訂單
+        	Order order = new Order();
+        	order.setBuyerId(buyerId);
+        	order.setSellerId(sellerId);
+        	order.setTotalAmount(totalAmount);
+        	order.setTotalItems(totalItems);
+        	Order saveOrder = orderRepository.save(order);
+        	
+        	// 建立訂單明細 -> 扣除庫存的數量
+        	for(Cart cartItem : soldCartItem) {
+        		
+        		OrderItem orderItem = orderItemMapper.createFromCart(cartItem, saveOrder.getOrderId());
+        		orderItemRepository.save(orderItem);
+        		
+        		// 扣除庫存數量
+        		Card card = cardRepository.findById(cartItem.getCardId()).get();
+        		card.updateAvailableQuantity(cartItem.getQuantity());
+        		cardRepository.save(card);
+        	}
+        	
+        	// 重新查詢訂單 -> 重新載入關聯
+        	Optional<Order> optOrder = orderRepository.findById(saveOrder.getOrderId());
+        	if(optOrder.isPresent()) {
+        		OrderDto orderDto = orderMapper.toDto(optOrder.get());
+        		
+        		if(orderDto.getSellerName() == null && !soldCartItem.isEmpty()) {
+        			String sellerName = soldCartItem.get(0).getCard().getSeller().getUserName();
+        			orderDto.setSellerName(sellerName);
+        		}
+        		createOrderDtos.add(orderDto);
+        	}
         }
         
-        // 6. 清空購物車
+        // 5. 清空購物車
         cartRepository.deleteByBuyerId(buyerId);
-        
-        return orderMapper.toDto(savedOrder);
+        return createOrderDtos;
     }
     
     @Override
@@ -157,4 +179,25 @@ public class OrderServiceImpl implements OrderService {
                     return orderMapper.toDto(updatedOrder);
                 });
     }
+
+	@Override
+	@Transactional
+	public List<OrderDto> findMySoldOrders(Integer sellerId) {
+		List<Order> orders = orderRepository.findOrderBySellerId(sellerId);
+		return orders.stream()
+				.map(order -> orderMapper.toDtoForSeller(order, sellerId))
+				// 過濾 -> 過濾不屬於該賣家的訂單(回傳null)
+				.filter(orderDto -> orderDto != null)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public List<OrderDto> findSoldOrdersByStatus(Integer sellerId, String status) {
+		List<Order> orders = orderRepository.findOrderBySellerIdAndStatus(sellerId, status);
+		return 	orders.stream().map(order -> orderMapper.toDtoForSeller(order, sellerId))
+				// 過濾 -> 過濾不屬於該賣家的訂單(回傳null)
+				.filter(orderDto -> orderDto != null)
+				.collect(Collectors.toList());
+	}    
 }

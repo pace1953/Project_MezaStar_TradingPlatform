@@ -30,4 +30,18 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .map(orderItemMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+	@Override
+	@Transactional
+	public List<OrderItemDto> findSoldOrderItems(Integer sellerId) {
+		return orderItemRepository.findBySellerIdOrderByOrderTimeDesc(sellerId).stream()
+				.map(orderItemMapper::toDto).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public List<OrderItemDto> findSoldOrderByStatus(Integer sellerId, String status) {
+		return orderItemRepository.findBySellerIdAndOrderStatusOrderByOrderTimeDesc(sellerId, status)
+				.stream().map(orderItemMapper::toDto).collect(Collectors.toList());
+	}
 }
