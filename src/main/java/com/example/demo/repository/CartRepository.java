@@ -28,7 +28,6 @@ public interface CartRepository extends JpaRepository<Cart, Integer>{
     // 檢查卡匣是否在某買家的購物車中
     boolean existsByBuyerIdAndCardId(Integer buyerId, Integer cardId);
     
-    
     // 根據買家ID刪除購物車（結帳後清空）
     @Modifying
     @Transactional

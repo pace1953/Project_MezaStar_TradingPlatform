@@ -24,15 +24,7 @@ public class CardServiceImpl implements CardService{
     
     @Autowired
     private CardMapper cardMapper;
-    
-    @Override
-    @Transactional
-    public List<CardDto> findAllCards() {
-        return cardRepository.findAll().stream()
-                .map(cardMapper::toDto)
-                .collect(Collectors.toList());
-    }
-    
+        
     @Override
     @Transactional
     public Optional<CardDto> findCardById(Integer cardId) {

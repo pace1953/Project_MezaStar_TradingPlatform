@@ -46,15 +46,15 @@ public class Card {
     @Column(name = "price", nullable = false)
     private int price;
     
-    // 卡匣的數量
+    // 卡匣的數量(總庫存)
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     
-    // 卡匣可獲得的數量
+    // 卡匣可獲得的數量(可用庫存)
     @Column(name = "available_quantity", nullable = false)
     private Integer availableQuantity;
     
-    // 卡匣販售的狀態：上架中、已售出
+    // 卡匣販售的狀態(預設先上架)
     @Column(name = "status", nullable = false, length = 20)
     private String status = "上架中"; 
     

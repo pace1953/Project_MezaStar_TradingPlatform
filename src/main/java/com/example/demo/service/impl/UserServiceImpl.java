@@ -10,7 +10,7 @@ import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import com.example.demo.util.Hash;
+import com.example.demo.util.BCrypt;
 
 
 @Service
@@ -34,10 +34,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void addUser(String username, String password, String email, Boolean active, String role) {
 		
-		String salt = Hash.getSalt();
-		String passwordHash = Hash.getHash(password, salt);
+		String passwordHash = BCrypt.getBCrypt(password);
 		
-		User user = new User(null, username, passwordHash, salt, email, active, role, null, null, null);
+		User user = new User(null, username, passwordHash, email, active, role, null, null, null);
 		
 		userRepository.save(user);
 		
@@ -50,10 +49,8 @@ public class UserServiceImpl implements UserService{
 		user.setUserName(username);
 		
 		// 取 Hash
-		String hashSalt = Hash.getSalt(); // 取得鹽
-		String hashPassword = Hash.getHash(password, hashSalt); // 取 hash 密碼
+		String hashPassword = BCrypt.getBCrypt(password); // 取 hash 密碼
 		user.setPasswordHash(hashPassword);
-		user.setSalt(hashSalt);
 		user.setEmail(email);
 		userRepository.save(user);
 		

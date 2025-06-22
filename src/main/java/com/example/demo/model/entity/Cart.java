@@ -24,6 +24,7 @@ public class Cart {
     @Column(name = "card_id", nullable = false)
     private Integer cardId;
     
+    // 購買的卡匣數量
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
     

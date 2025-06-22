@@ -38,19 +38,6 @@ public class CardRestController {
         return ResponseEntity.ok(ApiResponse.success("查詢成功", cards));
     }
     
-    // 根據卡匣ID進行查詢
-    @GetMapping("/{cardId}")
-    public ResponseEntity<ApiResponse<CardDto>> getCardById(@PathVariable Integer cardId) {
-        Optional<CardDto> card = cardService.findCardById(cardId);
-        if (card.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.success("查詢成功", card.get()));
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error(404, "找不到該卡匣"));
-        }
-    }
-
     // 多條件搜尋
     @GetMapping("/search-multiCondition")
     public ResponseEntity<ApiResponse<List<CardDto>>> searchCardsByMultiCondition(
@@ -63,9 +50,8 @@ public class CardRestController {
     	return ResponseEntity.ok(ApiResponse.success("查詢成功", cards));
     }
     
-    
     // 查詢我的卡匣（需要登入）
-    @GetMapping("/my-cards")
+    @GetMapping("/myCards")
     public ResponseEntity<ApiResponse<List<CardDto>>> getMyCards(HttpSession session) {
         UserCert userCert = (UserCert) session.getAttribute("userCert");
         if (userCert == null) {
@@ -175,6 +161,4 @@ public class CardRestController {
                     .body(ApiResponse.error(404, "刪除失敗"));
         }
     }
-    
-    
 }

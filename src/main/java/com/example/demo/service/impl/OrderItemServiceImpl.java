@@ -34,14 +34,14 @@ public class OrderItemServiceImpl implements OrderItemService {
 	@Override
 	@Transactional
 	public List<OrderItemDto> findSoldOrderItems(Integer sellerId) {
-		return orderItemRepository.findBySellerIdOrderByOrderTimeDesc(sellerId).stream()
+		return orderItemRepository.findBySellerId(sellerId).stream()
 				.map(orderItemMapper::toDto).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional
 	public List<OrderItemDto> findSoldOrderByStatus(Integer sellerId, String status) {
-		return orderItemRepository.findBySellerIdAndOrderStatusOrderByOrderTimeDesc(sellerId, status)
+		return orderItemRepository.findBySellerIdAndStatus(sellerId, status)
 				.stream().map(orderItemMapper::toDto).collect(Collectors.toList());
 	}
 }

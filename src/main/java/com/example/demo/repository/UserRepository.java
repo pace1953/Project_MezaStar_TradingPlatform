@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	List<User> findByUserName(String userName);
 	
 	// 2. T-SQL
-	@Query(value = "select user_id, username, password_hash, salt, email, active, role from users where username=:username", nativeQuery = true)
+	@Query(value = "select user_id, username, password_hash, email, active, role from users where username=:username", nativeQuery = true)
 	User getUser(String username);
 	
 	// 3. (Java)PQL
@@ -25,8 +25,4 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	
     // 根據使用者ID查詢
     Optional<User> findByUserId(Integer userId);
-    
-    // 根據email查詢
-    Optional<User> findByEmail(String email);
-	
 }

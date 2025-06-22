@@ -7,7 +7,6 @@ import com.example.demo.model.dto.CardDto;
 
 public interface CardService {
 
-    List<CardDto> findAllCards();
     Optional<CardDto> findCardById(Integer cardId);
     List<CardDto> findAvailableCards();
     // 多條件搜尋卡匣

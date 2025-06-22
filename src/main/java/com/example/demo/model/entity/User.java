@@ -33,9 +33,6 @@ public class User {
 	@Column(name = "password_hash", nullable = false)
 	private String passwordHash;
 	
-	@Column(name = "salt", nullable = false)
-	private String salt;
-	
 	@Column(name = "email", unique = true, nullable = false)
 	// unique = true(唯一性，不可重複)
 	private String email;
