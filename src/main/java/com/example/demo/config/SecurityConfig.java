@@ -17,10 +17,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // 禁用 CSRF（因為你的前端是獨立的）
+            // 禁用 CSRF（因為前端是獨立）
             .csrf(csrf -> csrf.disable())
             
-            // 允許所有請求通過（使用你原有的 Session 認證）
+            // 允許所有請求通過（使用原有的 Session 認證）
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             )
@@ -31,7 +31,7 @@ public class SecurityConfig {
             // 禁用 HTTP Basic 認證
             .httpBasic(basic -> basic.disable())
             
-            // 禁用登出功能（使用你原有的登出邏輯）
+            // 禁用登出功能（使用原有的登出邏輯）
             .logout(logout -> logout.disable());
 
         return http.build();
